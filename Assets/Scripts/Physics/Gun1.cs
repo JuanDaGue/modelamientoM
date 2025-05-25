@@ -1,17 +1,12 @@
 using UnityEngine;
 
-public class Gun1 : MonoBehaviour
-{
-    public float speed = 10f;
-    public GameObject projectilePrefab;
-    public Transform firePoint;
-    public float gravity = -9.81f;
-    public float timeToLive = 5f;
-    public int resolution = 30; // Number of points to draw the trajectory
+public class Gun1 : GunProperties
 
+{
+    [Header("Projectile")]
     private LineRenderer lineRenderer;
     private Camera playerCamera;
-
+    
     void Start()
     {
         lineRenderer = GetComponent<LineRenderer>();
@@ -30,13 +25,16 @@ public class Gun1 : MonoBehaviour
     void ShootProjectile()
     {
         GameObject projectile = Instantiate(projectilePrefab, firePoint.position, Quaternion.identity);
-        Rigidbody rb = projectile.GetComponent<Rigidbody>();
+        //Rigidbody rb = projectile.GetComponent<Rigidbody>();
 
         Vector3 shootDirection = playerCamera.transform.forward;
         Vector3 initialVelocity = shootDirection * speed;
         initialVelocity.y += Mathf.Abs(gravity) * 0.5f; // Add vertical arc
         Debug.Log("initialVelocity" + initialVelocity);
-        rb.linearVelocity = initialVelocity;
+        //rb.linearVelocity = initialVelocity;
+        ParabolicGun parabolicGun = projectile.GetComponent<ParabolicGun>();
+        parabolicGun.firePoint = firePoint;
+        parabolicGun.initialVelocity = initialVelocity;
         Destroy(projectile, timeToLive);
 
         DrawTrajectory(firePoint.position, initialVelocity);

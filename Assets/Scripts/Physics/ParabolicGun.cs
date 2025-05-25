@@ -99,8 +99,7 @@ using UnityEngine;
 
 public class ParabolicGun : MonoBehaviour
 {
-    public float speed = 10f;
-    public float angle = 45f; // in degrees
+
     public GameObject projectilePrefab;
     public Transform firePoint;
     public float gravity = -9.81f;
@@ -115,7 +114,7 @@ public class ParabolicGun : MonoBehaviour
     private float lifeTimer = 0f;
     private int bounceCount = 0;
 
-    private LineRenderer lineRenderer;
+
 
     void Start()
     {
@@ -129,9 +128,7 @@ public class ParabolicGun : MonoBehaviour
         velocity = initialVelocity;
         position = firePoint.position;
 
-        lineRenderer = GetComponent<LineRenderer>();
-        if (lineRenderer != null)
-            DrawTrajectory(position, velocity);
+
     }
 
     void Update()
@@ -177,17 +174,5 @@ public class ParabolicGun : MonoBehaviour
         transform.position = position;
     }
 
-    void DrawTrajectory(Vector3 start, Vector3 initVel)
-    {
-        int resolution = 50;
-        Vector3[] points = new Vector3[resolution];
-        for (int i = 0; i < resolution; i++)
-        {
-            float t = (i / (float)(resolution - 1)) * timeToLive;
-            Vector3 pos = start + initVel * t + 0.5f * new Vector3(0, gravity, 0) * t * t;
-            points[i] = pos;
-        }
-        lineRenderer.positionCount = resolution;
-        lineRenderer.SetPositions(points);
-    }
+
 }
