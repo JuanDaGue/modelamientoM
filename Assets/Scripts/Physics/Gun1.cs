@@ -35,7 +35,7 @@ public class Gun1 : MonoBehaviour
         Vector3 shootDirection = playerCamera.transform.forward;
         Vector3 initialVelocity = shootDirection * speed;
         initialVelocity.y += Mathf.Abs(gravity) * 0.5f; // Add vertical arc
-
+        Debug.Log("initialVelocity" + initialVelocity);
         rb.linearVelocity = initialVelocity;
         Destroy(projectile, timeToLive);
 
