@@ -14,11 +14,13 @@ public class GunProperties : ScriptableObject
 
     [Header("Projectile")]
     public GameObject projectilePrefab;
-    public Transform firePoint;
+    //public GameObject  firePoint;
     public float projectileSpeed = 50f;
+    public float cooldown;
 
+    [Header("Trajectory")]
     public float timeToLive = 5f;
-    public int resolution = 2;
+    public int trajectoryResolution = 2;
     public float speed;
     private LineRenderer lineRenderer;
     private Camera playerCamera;

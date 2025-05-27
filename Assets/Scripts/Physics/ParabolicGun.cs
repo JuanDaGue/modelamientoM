@@ -121,7 +121,7 @@ public class ParabolicGun : MonoBehaviour
         // Calculate initial velocity from angle and speed
         //float radAngle = Mathf.Deg2Rad * angle;
         float radAngle = Mathf.Atan2(initialVelocity.y, initialVelocity.x); // Ensure angle is between 0 and 90 degrees
-        Debug.Log("ParabolicGun radAngle"+radAngle);
+        //Debug.Log("ParabolicGun radAngle"+radAngle);
         Vector3 dir = firePoint.forward;
         //initialVelocity = new Vector3(dir.x * speed * Mathf.Cos(radAngle), speed * Mathf.Sin(radAngle), dir.z * speed * Mathf.Cos(radAngle));
         
