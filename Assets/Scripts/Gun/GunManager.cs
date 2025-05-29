@@ -1,44 +1,50 @@
 using UnityEngine;
 using System.Collections.Generic;
 
+[RequireComponent(typeof(LineRenderer))]
 public class GunManager : MonoBehaviour
 {
-    [Tooltip("List your ScriptableObject assets here in inspector order")]
-    public List<GunProperties> guns;
+    public List<GunBase> guns;
+    public Transform firePoint;
 
-    private GunProperties activeGun;
-    private float cooldownTimer=10f;
-    private int ammoInClip;
-    public Transform  firePoint;
     private Camera playerCamera;
+    private GunBase activeGun;
+    private LineRenderer lineRenderer;
+
+    private float cooldownTimer = 0f;
+    private int ammoInClip = 0;
+
     void Start()
     {
-
-        
         playerCamera = Camera.main;
+        lineRenderer = GetComponent<LineRenderer>();
+
         if (guns.Count > 0)
             EquipGun(0);
-        cooldownTimer = activeGun.cooldown;
     }
 
     void Update()
     {
-        SwitchGuns();
-  
-        Debug.Log("Cooldown Timer: " + cooldownTimer);
         if (activeGun == null) return;
 
-        if (cooldownTimer > 0)
-            cooldownTimer -= Time.deltaTime;
+        cooldownTimer -= Time.deltaTime;
+        HandleInput();
+        SwitchGuns();
+    }
 
+    void HandleInput()
+    {
         if (Input.GetKey(KeyCode.E) && cooldownTimer <= 0 && ammoInClip > 0)
         {
-            FireActiveGun();
-            //activeGun.
+            activeGun.Fire(firePoint, playerCamera, lineRenderer);
+            cooldownTimer = activeGun.fireRate;
+            ammoInClip--;
         }
 
         if (Input.GetKeyDown(KeyCode.R))
+        {
             Reload();
+        }
     }
 
     void SwitchGuns()
@@ -48,7 +54,6 @@ public class GunManager : MonoBehaviour
             if (Input.GetKeyDown(guns[i].activationKey))
             {
                 EquipGun(i);
-                Debug.Log("Switched to: " + guns[i].weaponName);
                 break;
             }
         }
@@ -58,28 +63,33 @@ public class GunManager : MonoBehaviour
     {
         activeGun = guns[index];
         ammoInClip = activeGun.clipSize;
-        cooldownTimer = 0f;
+        cooldownTimer = 0;
         Debug.Log("Equipped: " + activeGun.weaponName);
-    }
-
-    void FireActiveGun()
-    {
-        Debug.Log(" Manager Firing: " + activeGun.weaponName);
-        var proj = Instantiate(activeGun.projectilePrefab, firePoint.transform.position, firePoint.transform.rotation);
-        var parab = proj.GetComponent<ParabolicGun>();
-        Vector3 shootDirection = playerCamera.transform.forward;
-        Vector3 initialVelocity = shootDirection * activeGun.speed;
-        parab.initialVelocity = initialVelocity;
-        parab.firePoint = firePoint;
-        parab.gravity = activeGun.gravity;
-        parab.timeToLive = activeGun.timeToLive;
-        ammoInClip--;
-        cooldownTimer = activeGun.fireRate;
     }
 
     void Reload()
     {
         ammoInClip = activeGun.clipSize;
-        Debug.Log("Reloaded " + activeGun.weaponName);
+        Debug.Log("Reloaded: " + activeGun.weaponName);
+    }
+    public GunBase GetActiveGun()
+    {
+        return activeGun;
+    }
+    public float GetCooldownTime()
+    {
+        return cooldownTimer;
+    }
+    public float GetReloadTime()
+    {
+        return activeGun.fireRate;
+    }
+    public float GetReloadProgress()
+    {
+        return (cooldownTimer / activeGun.fireRate);
+    }
+    public int GetAmmoInClip()
+    {
+        return ammoInClip;
     }
 }

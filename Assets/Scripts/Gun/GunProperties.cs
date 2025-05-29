@@ -1,3 +1,4 @@
+
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "GunProperties_", menuName = "FPS/Gun Properties", order = 1)]
@@ -22,7 +23,7 @@ public class GunProperties : ScriptableObject
     public float timeToLive = 5f;
     public int trajectoryResolution = 2;
     public float speed;
-    private LineRenderer lineRenderer;
-    private Camera playerCamera;
+    //private LineRenderer lineRenderer;
+    //private Camera playerCamera;
     public float gravity = -9.81f;
 }

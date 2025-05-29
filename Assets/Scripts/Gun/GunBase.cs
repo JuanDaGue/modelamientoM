@@ -1,51 +1,19 @@
-// GunBase.cs
 using UnityEngine;
 
-[RequireComponent(typeof(LineRenderer))]
-public abstract class GunBase : GunProperties
+public abstract class GunBase : ScriptableObject
 {
-    [Tooltip("Assign this gun's properties ScriptableObject")]
-    public GunProperties props;
+    public string weaponName;
+    public KeyCode activationKey = KeyCode.Alpha1;
+    public float fireRate = 0.2f;
+    public int clipSize = 10;
+    public float projectileSpeed = 20f;
+    public float gravity = -9.81f;
+    public float timeToLive = 5f;
+    public int trajectoryResolution = 10;
 
-    protected LineRenderer lineRenderer;
-    protected Camera playerCamera;
-    protected int ammoInClip;
+    public GameObject projectilePrefab;
 
-    protected virtual void Awake()
-    {
-        //lineRenderer = this.GetComponent<LineRenderer>();
-        playerCamera = Camera.main;
-        ammoInClip = props.clipSize;
-        lineRenderer.positionCount = props.trajectoryResolution;
-    }
+    public Sprite weaponIcon;
 
-    protected virtual void Update()
-    {
-        if (cooldown > 0)
-            cooldown -= Time.deltaTime;
-
-        if (Input.GetKeyDown(KeyCode.R))
-            Reload();
-    }
-
-    protected void Reload()
-    {
-        ammoInClip = props.clipSize;
-        Debug.Log($"Reloaded {props.weaponName}");
-    }
-
-    protected bool CanFire() => cooldown <= 0f && ammoInClip > 0;
-
-    protected void HandleFireInput()
-    {
-        if (Input.GetKey(props.activationKey) && CanFire())
-        {
-            Fire();
-            ammoInClip--;
-            cooldown = props.fireRate;
-        }
-    }
-
-    protected abstract void Fire();
+    public abstract void Fire(Transform firePoint, Camera playerCamera, LineRenderer lineRenderer);
 }
-
